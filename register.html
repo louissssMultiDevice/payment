@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register - Fika Store</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .register-box {
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0px 6px 15px rgba(0,0,0,0.5);
+      width: 350px;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #38bdf8;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background: #38bdf8;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      color: #0f172a;
+    }
+    button:hover {
+      background: #0ea5e9;
+    }
+    .link {
+      text-align: center;
+      margin-top: 12px;
+    }
+    .link a {
+      color: #38bdf8;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="register-box">
+    <h2>Register Akun</h2>
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="register()">Daftar</button>
+    <div class="link">
+      <p>Sudah punya akun? <a href="login.html">Login</a></p>
+    </div>
+  </div>
+
+  <script>
+    async function register() {
+      let username = document.getElementById("username").value.trim();
+      let password = document.getElementById("password").value.trim();
+
+      if (!username || !password) {
+        alert("Isi semua field!");
+        return;
+      }
+
+      // Ambil database.json
+      let response = await fetch("database.json");
+      let users = await response.json();
+
+      // Cek kalau username sudah ada
+      if (users.some(u => u.username === username)) {
+        alert("Username sudah terdaftar!");
+        return;
+      }
+
+      // Buat tanggal login pertama (saat daftar)
+      let tanggal = new Date().toLocaleString("id-ID");
+
+      // Tambahkan user baru
+      users.push({ username, password, tanggal });
+
+      // Simpan ke database.json (simulasi, butuh server beneran utk bener2 simpan)
+      await fetch("database.json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(users, null, 2)
+      });
+
+      alert("Registrasi berhasil! Silakan login.");
+      window.location.href = "login.html";
+    }
+  </script>
+</body>
+</html>
