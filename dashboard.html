@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #232526, #414345);
+      color: #fff;
+      text-align: center;
+      padding: 50px;
+    }
+    .box {
+      background: rgba(0,0,0,0.7);
+      padding: 30px;
+      border-radius: 12px;
+      display: inline-block;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #00c6ff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0072ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Selamat Datang, <span id="user"></span>!</h1>
+    <p>Ini adalah dashboard kamu.</p>
+    <button onclick="goPayment()">Ke Payment</button>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    const user = localStorage.getItem("loggedInUser");
+    if (!user) {
+      window.location.href = "index.html"; // jika belum login, kembali ke login
+    } else {
+      document.getElementById("user").innerText = user;
+    }
+
+    function goPayment() {
+      window.location.href = "payment.html"; // halaman payment kamu
+    }
+
+    function logout() {
+      localStorage.removeItem("loggedInUser");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
