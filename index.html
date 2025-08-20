@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login / Register</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #fff;
+    }
+    .container {
+      background: rgba(0,0,0,0.8);
+      padding: 25px;
+      border-radius: 12px;
+      width: 350px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      background: #00c6ff;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0072ff;
+    }
+    .toggle {
+      margin-top: 15px;
+      cursor: pointer;
+      color: #00c6ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="formTitle">Login</h2>
+
+    <input type="text" id="username" placeholder="Username" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button onclick="submitForm()">Login</button>
+
+    <p class="toggle" onclick="toggleForm()">Belum punya akun? Register</p>
+  </div>
+
+  <script>
+    let isLogin = true;
+
+    function toggleForm() {
+      isLogin = !isLogin;
+      document.getElementById("formTitle").innerText = isLogin ? "Login" : "Register";
+      document.querySelector("button").innerText = isLogin ? "Login" : "Register";
+      document.querySelector(".toggle").innerText = isLogin 
+        ? "Belum punya akun? Register" 
+        : "Sudah punya akun? Login";
+    }
+
+    function submitForm() {
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      if (!username || !password) {
+        alert("Harap isi semua field!");
+        return;
+      }
+
+      if (isLogin) {
+        // LOGIN
+        const storedUser = localStorage.getItem(username);
+        if (!storedUser) {
+          alert("Akun tidak ditemukan. Silakan register dulu!");
+          return;
+        }
+        const userData = JSON.parse(storedUser);
+        if (userData.password === password) {
+          alert("Login berhasil!");
+          localStorage.setItem("loggedInUser", username);
+          window.location.href = "dashboard.html";
+        } else {
+          alert("Password salah!");
+        }
+      } else {
+        // REGISTER
+        if (localStorage.getItem(username)) {
+          alert("Username sudah terdaftar!");
+          return;
+        }
+        const userData = { username, password };
+        localStorage.setItem(username, JSON.stringify(userData));
+        alert("Registrasi berhasil! Silakan login.");
+        toggleForm();
+      }
+    }
+  </script>
+</body>
+</html>
