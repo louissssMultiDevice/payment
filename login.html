@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .login-box {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,255,255,0.5);
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 5px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: cyan;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #00ffaa;
+    }
+    .error {
+      color: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Username" required><br>
+    <input type="password" id="password" placeholder="Password" required><br>
+    <button onclick="login()">Login</button>
+    <p id="msg" class="error"></p>
+  </div>
+
+  <script>
+    // Simulasi database pakai localStorage
+    if (!localStorage.getItem("users")) {
+      localStorage.setItem("users", JSON.stringify([]));
+    }
+
+    function login() {
+      let username = document.getElementById("username").value;
+      let password = document.getElementById("password").value;
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+
+      // cek user
+      let user = users.find(u => u.username === username && u.password === password);
+
+      if (user) {
+        // update tanggal login terakhir
+        user.lastLogin = new Date().toLocaleString();
+        localStorage.setItem("users", JSON.stringify(users));
+
+        // simpan session
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+        // redirect ke dashboard
+        window.location.href = "dashboard.html";
+      } else {
+        document.getElementById("msg").innerText = "Username atau password salah!";
+      }
+    }
+  </script>
+</body>
+</html>
