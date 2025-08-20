@@ -63,53 +63,23 @@
   </div>
 
   <script>
-    let isLogin = true;
+async function loginUser() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
 
-    function toggleForm() {
-      isLogin = !isLogin;
-      document.getElementById("formTitle").innerText = isLogin ? "Login" : "Register";
-      document.querySelector("button").innerText = isLogin ? "Login" : "Register";
-      document.querySelector(".toggle").innerText = isLogin 
-        ? "Belum punya akun? Register" 
-        : "Sudah punya akun? Login";
+    const res = await fetch("/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    if (data.success) {
+        window.location.href = "dashboard.html";
     }
-
-    function submitForm() {
-      const username = document.getElementById("username").value.trim();
-      const password = document.getElementById("password").value.trim();
-
-      if (!username || !password) {
-        alert("Harap isi semua field!");
-        return;
-      }
-
-      if (isLogin) {
-        // LOGIN
-        const storedUser = localStorage.getItem(username);
-        if (!storedUser) {
-          alert("Akun tidak ditemukan. Silakan register dulu!");
-          return;
-        }
-        const userData = JSON.parse(storedUser);
-        if (userData.password === password) {
-          alert("Login berhasil!");
-          localStorage.setItem("loggedInUser", username);
-          window.location.href = "dashboard.html";
-        } else {
-          alert("Password salah!");
-        }
-      } else {
-        // REGISTER
-        if (localStorage.getItem(username)) {
-          alert("Username sudah terdaftar!");
-          return;
-        }
-        const userData = { username, password };
-        localStorage.setItem(username, JSON.stringify(userData));
-        alert("Registrasi berhasil! Silakan login.");
-        toggleForm();
-      }
-    }
+}
   </script>
 </body>
 </html>
